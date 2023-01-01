@@ -10,7 +10,9 @@ public class SerializeDeserialize
     public enum EnumWithCustomName
     {
         [EnumMember(Value = "$UNKNOWN")]
-        Unknown = 0 // JSON is "$UNKNOWN"
+        Unknown = 0, // JSON is "$UNKNOWN"
+        [EnumMember(Value = "TRUE")]
+        True = 1 // JSON is "TRUE"
     }
 
     [JsonConverter(typeof(EnumConverter<EnumWithoutCustomName>))]
@@ -21,7 +23,8 @@ public class SerializeDeserialize
 
     public class ClassWithEnumProperty
     {
-        public EnumWithCustomName enumProp { set; get; }
+        public EnumWithCustomName enumProp1 { set; get; }
+        public EnumWithCustomName enumProp2 { set; get; }
         public EnumWithoutCustomName enumPropNoCustomName { set; get; }
     }
 
@@ -54,11 +57,12 @@ public class SerializeDeserialize
     public void SerializeEnumWithCustomName()
     {
         ClassWithEnumProperty jsonObj = new ClassWithEnumProperty {
-            enumProp = EnumWithCustomName.Unknown,
-            enumPropNoCustomName = EnumWithoutCustomName.Unknown
+            enumProp1 = EnumWithCustomName.Unknown,
+            enumPropNoCustomName = EnumWithoutCustomName.Unknown,
+            enumProp2 = EnumWithCustomName.True // This reuses EnumConverter<EnumWithCustomName>.stringToEnum
         };
 
         string serialized = JsonSerializer.Serialize<ClassWithEnumProperty>(jsonObj);
-        Assert.Equal("{\"enumProp\":\"$UNKNOWN\",\"enumPropNoCustomName\":\"Unknown\"}", $"{serialized}");
+        Assert.Equal("{\"enumProp1\":\"$UNKNOWN\",\"enumProp2\":\"TRUE\",\"enumPropNoCustomName\":\"Unknown\"}", $"{serialized}");
     }
 }
