@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using CustomEnumName;
 namespace CustomEnumName.Tests;
 
-public class Deserialize
+public class SerializeDeserialize
 {
     [JsonConverter(typeof(EnumConverter<EnumWithCustomName>))]
     public enum EnumWithCustomName
@@ -35,6 +35,6 @@ public class Deserialize
         };
 
         string serialized = JsonSerializer.Serialize<ClassWithEnumProperty>(jsonObj);
-        Assert.Equal("\"$UNKNOWN\"", "Should be serialized as \"$UNKNOWN\"");
+        Assert.Equal("{\"enumProp\":\"$UNKNOWN\"}", $"{serialized}");
     }
 }

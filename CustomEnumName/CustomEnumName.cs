@@ -8,27 +8,38 @@ namespace CustomEnumName;
 public class EnumConverter<T> : JsonConverter<T>
     where T : struct, Enum
 {
-    private Dictionary<string, object>? enumMembers;
+    private Dictionary<string, Enum>? stringToEnum;
+    private Dictionary<Enum, string>? enumToString;
     public override bool CanConvert(Type type)
     {
         return type.IsEnum;
     }
 
-    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        if (enumMembers == null)
+    private void MaybeInitDictionary (Type typeToConvert) {
+        if (stringToEnum == null || enumToString == null)
         {
-            var query = from field in typeToConvert.GetFields(BindingFlags.Public | BindingFlags.Static)
+            var queryNameAndValue = from field in typeToConvert.GetFields(BindingFlags.Public | BindingFlags.Static)
                         let attr = field.GetCustomAttribute<EnumMemberAttribute>()
                         where attr != null
                         select (attr.Value, field.GetValue(field.Name));
-            enumMembers = query.ToDictionary(p => p.Item1, p => p.Item2);
+            stringToEnum = queryNameAndValue.ToDictionary(p => p.Item1, p => (Enum)p.Item2);
+            var queryValueAndName = from field in typeToConvert.GetFields(BindingFlags.Public | BindingFlags.Static)
+                        let attr = field.GetCustomAttribute<EnumMemberAttribute>()
+                        where attr != null
+                        select (field.GetValue(field.Name), attr.Value);
+            enumToString = queryValueAndName.ToDictionary(p => (Enum)p.Item1, p => p.Item2);
         }
 
+    }
+
+    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        MaybeInitDictionary(typeToConvert);
+
         string? customName = reader.GetString();
-        if (enumMembers.Count > 0 && customName != null)
+        if (stringToEnum!.Count > 0 && customName != null)
         {
-            var ret = enumMembers[customName];
+            var ret = stringToEnum[customName];
             return (T)ret;
         }
 
@@ -37,6 +48,7 @@ public class EnumConverter<T> : JsonConverter<T>
 
     public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
     {
-        throw new NotImplementedException("Not implemented.");
+        MaybeInitDictionary(value.GetType());
+        writer.WriteStringValue(enumToString![value]);
     }
 }
