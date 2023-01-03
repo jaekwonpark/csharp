@@ -9,6 +9,9 @@ RUN mkdir /usr/local/dotnet
 RUN tar xvfz /tmp/${DOTNET_INSTALL_FILE} -C /usr/local/dotnet
 RUN rm /tmp/${DOTNET_INSTALL_FILE}
 
+# install dotnet runtime 6
+RUN yum install -y dotnet-runtime-6.0
+
 # copy .bash_profile
 COPY .bash_profile /root/.bash_profile
 
@@ -28,4 +31,4 @@ CMD ["/bin/bash", "-l"]
 # To create a docker image, run 
 # docker build -t powershell-linux .
 # To run 
-# docker run -it poerwhell-linux
+# docker run -it powershell-linux
