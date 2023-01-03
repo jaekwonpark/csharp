@@ -12,6 +12,11 @@ RUN rm /tmp/${DOTNET_INSTALL_FILE}
 # copy .bash_profile
 COPY .bash_profile /root/.bash_profile
 
+# copy example C# application
+ENV WORKSPACE /root/workspace
+RUN mkdir -p ${WORKSPACE}/MyApp
+COPY MyApp ${WORKSPACE}/MyApp
+
 #Register the Microsoft RedHat repository
 RUN curl https://packages.microsoft.com/config/rhel/7/prod.repo | tee /etc/yum.repos.d/microsoft.repo
 
