@@ -15,7 +15,7 @@ function parse_git_branch {
     git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
-PS1="[\u@${LIGHT_GREEN}rLinux:Net6${BLACK}:\w]${LIGHT_GREEN}\$(parse_git_branch)
+PS1="[\u@${LIGHT_GREEN}rLinux:Net8${BLACK}:\w]${LIGHT_GREEN}\$(parse_git_branch)
 $DEFAULT\$"
 
 

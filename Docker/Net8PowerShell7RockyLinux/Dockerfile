@@ -2,8 +2,7 @@ FROM rockylinux:9
 
 # install dotnet sdk 8.
 RUN dnf update -y
-RUN dnf install dotnet-sdk-8.0
-RUN dotnet --version
+RUN dnf install dotnet-sdk-8.0 -y
 
 # copy .bash_profile
 COPY .bash_profile /root/.bash_profile
