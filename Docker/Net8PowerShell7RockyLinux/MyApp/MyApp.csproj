@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <!--PackageReference Include="VmmSDK" Version="1.0.0-1" /-->
+    <ProjectReference Include="../../../../../../nutanix/ntnx-api-vmm/vmm-api-codegen/vmm-csharp-client-sdk/target/generated-sources/swagger/src/Nutanix.VmmSDK/Nutanix.VmmSDK.csproj" />  
+    <!--PackageReference Include="Nutanix.VmmSDK" Version="1.0.0-1" /-->
+    <PackageReference Include="NLog" Version="5.1.0" />
+  </ItemGroup>
+
+</Project>
